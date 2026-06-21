@@ -12,8 +12,28 @@ class NATSManager:
 
     async def connect(self):
         try:
-            # Set a small timeout so connection issues don't hang server startup
-            self.nc = await nats.connect(settings.NATS_URL, connect_timeout=2)
+            async def error_cb(e):
+                logger.warning(f"NATS error callback: {e}")
+
+            async def disconnected_cb():
+                logger.warning("NATS client disconnected")
+
+            async def reconnected_cb():
+                logger.info("NATS client reconnected")
+
+            async def closed_cb():
+                logger.info("NATS client connection closed")
+
+            # Set a small timeout and override callbacks to prevent printing tracebacks to stderr
+            self.nc = await nats.connect(
+                settings.NATS_URL,
+                connect_timeout=2,
+                error_cb=error_cb,
+                disconnected_cb=disconnected_cb,
+                reconnected_cb=reconnected_cb,
+                closed_cb=closed_cb,
+                max_reconnect_attempts=1
+            )
             self.js = self.nc.jetstream()
             logger.info("Connected to NATS.io successfully")
         except Exception as e:
