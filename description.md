@@ -52,7 +52,7 @@ Playwright / TagUI / UIAutomation / Python Script / AI
 
 * React
 * Vite
-* TypeScript
+* JavaScript
 * React Flow
 * Zustand
 * TailwindCSS
