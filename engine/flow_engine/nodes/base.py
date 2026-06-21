@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from typing import Any, Dict
-from app.core.database import SessionLocal  # If we need DB logging or we log to console/nats
 from flow_engine.context import ExecutionContext
 
 class BaseNode(ABC):
